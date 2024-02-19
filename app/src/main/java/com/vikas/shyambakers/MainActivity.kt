@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,13 +33,28 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.vikas.shyambakers.PresentationLayer.MainViewModel
+import com.vikas.shyambakers.PresentationLayer.ProductDetails
 import com.vikas.shyambakers.ui.theme.ShyamBakersTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    val mainViewModel : MainViewModel by viewModels()
+
+    val pickProductImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia())
+    {
+     mainViewModel.productDisplay.value = it
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         registerLoginLauncher()
+
+
+
+
 
 
         setContent {
@@ -50,7 +66,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val nav = rememberNavController()
                     NavHost(navController = nav, startDestination = Screens.MAINACTIVITY.name ){
-                        composable(Screens.MAINACTIVITY.name){ App(::launchLoginFlow, nav )}
+                        composable(Screens.MAINACTIVITY.name){ App(::launchLoginFlow, mainViewModel ,nav )}
+                        composable(Screens.INVENTORY.name){ ProductDetails(nav , mainViewModel , pickProductImage)}
                     }
 
                 }
@@ -97,7 +114,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun App(
     launcherLoginFlow: (() -> Unit) -> Unit,
-   // mainViewModel: MainViewModel,
+    mainViewModel: MainViewModel,
     nav: NavHostController
 ) {
 
@@ -105,7 +122,7 @@ fun App(
         TopAppBar(
             title = { Text(text = "Log In ") },
             colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color.LightGray
+                containerColor = Color.Blue
             )
         )
 

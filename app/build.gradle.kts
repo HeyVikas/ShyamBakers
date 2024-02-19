@@ -81,6 +81,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
 
+    //imagepicker
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
 
 
