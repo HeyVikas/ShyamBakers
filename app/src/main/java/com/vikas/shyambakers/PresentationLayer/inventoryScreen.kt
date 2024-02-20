@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -34,7 +35,7 @@ fun ProductDetails(nav : NavHostController , mainViewModel: MainViewModel , pick
         Column {
             TopAppBar(title = { Text(text = "Inventory")},
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color.Blue
+                    containerColor = Color.LightGray
                 )
                 )
 
@@ -45,46 +46,62 @@ fun ProductDetails(nav : NavHostController , mainViewModel: MainViewModel , pick
 
                 Box {
 
-                    Box (
-                        modifier = Modifier
-                            .height(100.dp)
-                            .width(100.dp)
-                    ){
-                        AsyncImage(model = mainViewModel.productDisplay.value,
-                            contentDescription = "Product Image",
+                    Column {
+
+
+                        Box(
                             modifier = Modifier
-                                .width(80.dp)
-                                .height(80.dp)
+                                .height(100.dp)
+                                .width(100.dp)
+                        ) {
+                            AsyncImage(
+                                model = mainViewModel.productDisplay.value,
+                                contentDescription = "Product Image",
+                                modifier = Modifier
+                                    .width(80.dp)
+                                    .height(80.dp)
                             )
-                        IconButton(onClick = { pickProductImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }) {
-                            Icon(imageVector = Icons.Default.AddCircle,
-                                contentDescription = "To add image" )
+                            IconButton(onClick = {
+                                pickProductImage.launch(
+                                    PickVisualMediaRequest(
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                                    )
+                                )
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.AddCircle,
+                                    contentDescription = "To add image"
+                                )
+                            }
+
                         }
 
+
+
+                        TextField(value = mainViewModel.productName.value,
+                            onValueChange = {
+                                mainViewModel.productName.value = it
+                            },
+                            label = { Text(text = "Product Name") }
+                        )
+
+                        TextField(value = mainViewModel.productQuantity.value.toString(),
+                            onValueChange = {
+                                mainViewModel.productQuantity.value = it.toInt()
+                            },
+                            label = { Text(text = "Product Quantity") }
+                        )
+
+
+                        TextField(value = mainViewModel.productPrice.value.toString(),
+                            onValueChange = {
+                                mainViewModel.productPrice.value = it.toInt()
+                            },
+                            label = { Text(text = "Product Price/ unit") }
+                        )
                     }
-
-
-                    TextField(value = mainViewModel.productName.value,
-                        onValueChange = {
-                            mainViewModel.productName.value = it
-                        },
-                        label = {Text(text="Product Name")}
-                        )
-
-                    TextField(value = mainViewModel.productQuantity.value.toString(),
-                        onValueChange = {
-                            mainViewModel.productQuantity.value = it.toInt()
-                        },
-                        label = {Text(text="Product Quantity")}
-                        )
-
-
-                    TextField(value = mainViewModel.productPrice.value.toString(),
-                        onValueChange = {
-                            mainViewModel.productPrice.value = it.toInt()
-                        },
-                        label = {Text(text="Product Price/ unit")}
-                        )
+                }
+                Row() {
 
                     Button(onClick = {
                         mainViewModel.product.value = mainViewModel.product.value.copy(
@@ -97,11 +114,11 @@ fun ProductDetails(nav : NavHostController , mainViewModel: MainViewModel , pick
                         mainViewModel.sendInventory()
 
                     }) {
-                        Text(text="Save")
+                        Text(text = "Save")
                     }
-
                 }
 
+                //to check the change..
             }
         }
 

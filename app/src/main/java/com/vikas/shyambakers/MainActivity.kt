@@ -122,7 +122,7 @@ fun App(
         TopAppBar(
             title = { Text(text = "Log In ") },
             colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color.Blue
+                containerColor = Color.LightGray
             )
         )
 
@@ -145,6 +145,7 @@ fun App(
 
                     }
 
+                    nav.navigate(Screens.INVENTORY.name)
                 }
 
             }) {

@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "604605835247-gtrrjrbmihdhmfg6jav2pojii6p7br7j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vikas.shyambakers",
+            "certificate_hash": "3f17d9818ef59914b08fb342a222d73349d3a6b2"
+          }
+        },
+        {
           "client_id": "604605835247-1a9ko44a2qr1hng7d3c2lropr5upim7b.apps.googleusercontent.com",
           "client_type": 3
         }
