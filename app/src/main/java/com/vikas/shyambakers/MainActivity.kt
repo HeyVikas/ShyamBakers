@@ -33,6 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.vikas.shyambakers.PresentationLayer.HomeScreen
 import com.vikas.shyambakers.PresentationLayer.MainViewModel
 import com.vikas.shyambakers.PresentationLayer.ProductDetails
 import com.vikas.shyambakers.ui.theme.ShyamBakersTheme
@@ -58,7 +59,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val nav = rememberNavController()
-                    NavHost(navController = nav, startDestination = Screens.INVENTORY.name) {
+                    NavHost(navController = nav, startDestination = Screens.HOME.name) {
+
+                       composable(Screens.HOME.name){ HomeScreen(mainViewModel , nav  )}
                         composable(Screens.INVENTORY.name) {
                             ProductDetails(
                                 nav,
@@ -66,6 +69,7 @@ class MainActivity : ComponentActivity() {
                                 pickProductImage
                             )
                         }
+
                     }
 
                 }
