@@ -25,8 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.vikas.shyambakers.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,25 +95,31 @@ fun ProductDetails(nav : NavHostController , mainViewModel: MainViewModel , pick
                         )
 
 
-                        TextField(value = mainViewModel.productPrice.value.toString(),
+                        TextField(value = mainViewModel.productPurchasePrice.value.toString(),
                             onValueChange = {
-                                mainViewModel.productPrice.value = it.toInt()
+                                mainViewModel.productPurchasePrice.value = it.toInt()
                             },
-                            label = { Text(text = "Product Price/ unit") }
+                            label = { Text(text = "Product Purchase Price/ unit") }
+                        )
+
+                        TextField(value = mainViewModel.productSalePrice.value.toString(),
+                            onValueChange = {
+                                mainViewModel.productSalePrice.value = it.toInt()
+                            },
+                            label = { Text(text = "Product Sale Price/ unit") }
                         )
                     }
                 }
                 Row() {
 
                     Button(onClick = {
-                        mainViewModel.product.value = mainViewModel.product.value.copy(
-                            productDisplay = mainViewModel.productDisplay.value.toString(),
-                            productName = mainViewModel.productName.value,
-                            productQuantity = mainViewModel.productQuantity.value,
-                            productPrice = mainViewModel.productPrice.value
-                        )
+                        mainViewModel.addInventoryProduct()
 
-                        mainViewModel.sendInventory()
+                        mainViewModel.productDisplay.value = R.drawable.product_display.toString().toUri()
+                        mainViewModel.productName.value = ""
+                        mainViewModel.productPurchasePrice.value = 0
+                        mainViewModel.productSalePrice.value = 0
+                        mainViewModel.productQuantity.value = 0
 
                     }) {
                         Text(text = "Save")

@@ -41,22 +41,15 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    val mainViewModel : MainViewModel by viewModels()
+    val mainViewModel: MainViewModel by viewModels()
 
     val pickProductImage = registerForActivityResult(ActivityResultContracts.PickVisualMedia())
     {
-     mainViewModel.productDisplay.value = it
+        mainViewModel.productDisplay.value = it
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        registerLoginLauncher()
-
-
-
-
-
-
         setContent {
             ShyamBakersTheme {
                 // A surface container using the 'background' color from the theme
@@ -65,93 +58,18 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val nav = rememberNavController()
-                    NavHost(navController = nav, startDestination = Screens.MAINACTIVITY.name ){
-                        composable(Screens.MAINACTIVITY.name){ App(::launchLoginFlow, mainViewModel ,nav )}
-                        composable(Screens.INVENTORY.name){ ProductDetails(nav , mainViewModel , pickProductImage)}
+                    NavHost(navController = nav, startDestination = Screens.INVENTORY.name) {
+                        composable(Screens.INVENTORY.name) {
+                            ProductDetails(
+                                nav,
+                                mainViewModel,
+                                pickProductImage
+                            )
+                        }
                     }
 
                 }
             }
-        }
-    }
-    // STEP 1:
-    private lateinit var loginLauncher: ActivityResultLauncher<Intent>
-    private fun registerLoginLauncher() {
-        Log.d("TAG", "Inside setupLoginLauncher")
-        loginLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result: ActivityResult ->
-                Log.d("TAG", "Inside ActivityResult $result")
-                if (result.resultCode == Activity.RESULT_OK) {
-                    Log.d("TAG", "Inside ResultLambda ")
-                    loginHandler()
-                } else Toast.makeText(this, "Not able to Login, Try Again", Toast.LENGTH_SHORT)
-                    .show()
-            }
-    }
-
-    // Step 2: Launcher
-    private fun launchLoginFlow(loginHandler: (() -> Unit)) {
-        this.loginHandler = loginHandler
-
-        val intent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(
-                listOf(
-                    AuthUI.IdpConfig.GoogleBuilder().build()
-                )
-            )
-            .build()
-
-        loginLauncher.launch(intent)
-    }
-
-    // Step 3: Handler (to get the result)
-    private lateinit var loginHandler: (() -> Unit)
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun App(
-    launcherLoginFlow: (() -> Unit) -> Unit,
-    mainViewModel: MainViewModel,
-    nav: NavHostController
-) {
-
-    Column() {
-        TopAppBar(
-            title = { Text(text = "Log In ") },
-            colors = TopAppBarDefaults.smallTopAppBarColors(
-                containerColor = Color.LightGray
-            )
-        )
-
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            Button(onClick = {
-
-                launcherLoginFlow {
-                    val user = FirebaseAuth.getInstance().currentUser
-                    user?.let {
-                        Log.e("TAG", "FirebaseAuth :- ${user.email}")
-                        Log.e("TAG", "FirebaseAuth :- ${user.displayName}")
-                        Log.e("TAG", "FirebaseAuth :- ${user.photoUrl}")
-                        Log.e("TAG", "FirebaseAuth :- ${user.providerId}")
-                        Log.e("TAG", "FirebaseAuth :- ${user.uid}")
-
-                    }
-
-                    nav.navigate(Screens.INVENTORY.name)
-                }
-
-            }) {
-                Text(text = "Log In With Google")
-            }
-
         }
     }
 }
